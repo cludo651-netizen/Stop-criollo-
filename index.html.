@@ -1,1 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STOP CRIOLLO ELITE</title>
+    <script src="https://www.paypal.com/sdk/js?client-id=TU_CLIENT_ID_AQUI&currency=USD"></script>
+    <style>
+        :root { --am: #F7D117; --az: #003893; --ro: #CF142B; --dark: #0a0a0a; }
+        body { font-family: 'Arial', sans-serif; background: var(--dark); color: white; margin: 0; text-align: center; }
+        .view { display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .active { display: flex; }
+        .btn { background: var(--az); color: white; border: none; padding: 18px; border-radius: 12px; width: 100%; max-width: 300px; font-weight: bold; margin: 10px; cursor: pointer; font-size: 1.1rem; }
+        .btn-stop { background: var(--ro); font-size: 2.5rem; height: 120px; border-radius: 50%; box-shadow: 0 0 20px var(--ro); }
+        input { background: #1a1a1a; border: 1px solid var(--az); padding: 15px; border-radius: 8px; color: white; margin: 5px; width: 90%; }
+        .letra-box { font-size: 5rem; color: var(--am); border: 5px solid var(--az); padding: 20px; border-radius: 20px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div id="m-inicio" class="view active">
+        <h1 style="color:var(--am)">🇻🇪 STOP CRIOLLO</h1>
+        <button class="btn" onclick="ir('m-lobby')">JUGAR AHORA</button>
+        <button class="btn" style="background:#222" onclick="ir('m-tienda')">TIENDA</button>
+    </div>
+
+    <div id="m-lobby" class="view">
+        <h2>¿Cómo jugar?</h2>
+        <button class="btn" onclick="jugar()">SOLO</button>
+        <button class="btn" onclick="jugar()">SALA 8 PERSONAS</button>
+        <button onclick="ir('m-inicio')" style="background:none; color:var(--am); border:none;">VOLVER</button>
+    </div>
+
+    <div id="m-juego" class="view">
+        <div id="display-letra" class="letra-box">?</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; width: 100%;">
+            <input type="text" placeholder="Chamo/a">
+            <input type="text" placeholder="Coroto">
+            <input type="text" placeholder="Comida">
+            <input type="text" placeholder="Lugar">
+        </div>
+        <button class="btn btn-stop" onclick="vibrarYStop()">STOP!</button>
+    </div>
+
+    <div id="m-tienda" class="view">
+        <h2>TIENDA VIP</h2>
+        <div id="paypal-button-container"></div>
+        <button class="btn" onclick="ir('m-inicio')">VOLVER</button>
+    </div>
+
+    <script>
+        function ir(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'm-tienda') renderPayPal();
+        }
+
+        function jugar() {
+            const letras = "ABCDEFGHJKLMNOPQRSTV";
+            document.getElementById('display-letra').innerText = letras[Math.floor(Math.random()*letras.length)];
+            ir('m-juego');
+        }
+
+        function vibrarYStop() {
+            if (navigator.vibrate) { navigator.vibrate([200, 100, 200]); }
+            alert("¡STOP CRIOLLO!");
+            ir('m-inicio');
+        }
+
+        function renderPayPal() {
+            document.getElementById('paypal-button-container').innerHTML = "";
+            paypal.Buttons({
+                createOrder: (data, actions) => { return actions.order.create({ purchase_units: [{ amount: { value: '1.00' } }] }); },
+                onApprove: (data, actions) => { return actions.order.capture().then(() => alert('Pago Exitoso!')); }
+            }).render('#paypal-button-container');
+        }
+    </script>
+</body>
+</html>
 
