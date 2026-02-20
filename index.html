@@ -4,76 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STOP CRIOLLO ELITE</title>
-    <script src="https://www.paypal.com/sdk/js?client-id=TU_CLIENT_ID_AQUI&currency=USD"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <style>
-        :root { --am: #F7D117; --az: #003893; --ro: #CF142B; --dark: #0a0a0a; }
+        :root { --am: #F7D117; --az: #003893; --ro: #CF142B; --dark: #001a33; }
         body { font-family: 'Arial', sans-serif; background: var(--dark); color: white; margin: 0; text-align: center; }
-        .view { display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .view { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
         .active { display: flex; }
-        .btn { background: var(--az); color: white; border: none; padding: 18px; border-radius: 12px; width: 100%; max-width: 300px; font-weight: bold; margin: 10px; cursor: pointer; font-size: 1.1rem; }
-        .btn-stop { background: var(--ro); font-size: 2.5rem; height: 120px; border-radius: 50%; box-shadow: 0 0 20px var(--ro); }
-        input { background: #1a1a1a; border: 1px solid var(--az); padding: 15px; border-radius: 8px; color: white; margin: 5px; width: 90%; }
-        .letra-box { font-size: 5rem; color: var(--am); border: 5px solid var(--az); padding: 20px; border-radius: 20px; margin-bottom: 20px; }
+        .btn { background: var(--az); color: white; border: 2px solid #0055e6; padding: 15px; border-radius: 15px; width: 100%; max-width: 300px; font-weight: bold; margin: 8px; cursor: pointer; }
+        .btn-google { background: #db4437; border: none; }
+        .btn-stop { background: var(--ro); font-size: 2rem; height: 100px; width: 100px; border-radius: 50%; box-shadow: 0 0 20px var(--ro); border: 4px solid white; }
+        input, select { background: #002b52; border: 1px solid var(--am); padding: 12px; border-radius: 10px; color: white; margin: 5px; width: 90%; }
+        .letra-box { font-size: 4rem; color: var(--am); border: 4px dashed var(--am); width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; border-radius: 20px; margin-bottom: 15px; }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 400px; }
     </style>
 </head>
 <body>
-    <div id="m-inicio" class="view active">
+
+    <div id="m-login" class="view active">
         <h1 style="color:var(--am)">🇻🇪 STOP CRIOLLO</h1>
-        <button class="btn" onclick="ir('m-lobby')">JUGAR AHORA</button>
-        <button class="btn" style="background:#222" onclick="ir('m-tienda')">TIENDA</button>
+        <button class="btn btn-google" onclick="loginGoogle()">ENTRAR CON GOOGLE</button>
     </div>
 
-    <div id="m-lobby" class="view">
-        <h2>¿Cómo jugar?</h2>
-        <button class="btn" onclick="jugar()">SOLO</button>
-        <button class="btn" onclick="jugar()">SALA 8 PERSONAS</button>
-        <button onclick="ir('m-inicio')" style="background:none; color:var(--am); border:none;">VOLVER</button>
+    <div id="m-inicio" class="view">
+        <h2 id="user-name">¡Habla, Pana!</h2>
+        <button class="btn" onclick="ir('m-crear-sala')">CREAR SALA</button>
+        <button class="btn" onclick="ir('m-unirse-sala')">UNIRME A SALA</button>
+        <button class="btn" style="background:#444" onclick="ir('m-tienda')">🛒 TIENDA (EMOJIS)</button>
+    </div>
+
+    <div id="m-crear-sala" class="view">
+        <h3>NUEVA SALA</h3>
+        <label>Jugadores (2-10):</label>
+        <input type="number" id="players" value="2" min="2" max="10">
+        <label>Rondas (3-10):</label>
+        <input type="number" id="rounds" value="3" min="3" max="10">
+        <button class="btn" onclick="crearSala()">GENERAR CÓDIGO</button>
+        <button class="btn" onclick="ir('m-inicio')" style="background:none">VOLVER</button>
     </div>
 
     <div id="m-juego" class="view">
         <div id="display-letra" class="letra-box">?</div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; width: 100%;">
-            <input type="text" placeholder="Chamo/a">
-            <input type="text" placeholder="Coroto">
-            <input type="text" placeholder="Comida">
-            <input type="text" placeholder="Lugar">
+        <div class="grid-inputs">
+            <input type="text" placeholder="Pana/Famoso">
+            <input type="text" placeholder="Vaina (Cosa)">
+            <input type="text" placeholder="Comida Criolla">
+            <input type="text" placeholder="Lugar de Vzla">
         </div>
         <button class="btn btn-stop" onclick="vibrarYStop()">STOP!</button>
     </div>
 
-    <div id="m-tienda" class="view">
-        <h2>TIENDA VIP</h2>
-        <div id="paypal-button-container"></div>
-        <button class="btn" onclick="ir('m-inicio')">VOLVER</button>
-    </div>
-
     <script>
+        // CONFIGURACIÓN QUE ME PASASTE
+        const firebaseConfig = {
+            apiKey: "AIzaSyA78hdwHxcCmZXh1hg7bz_jg229YaX9N9I",
+            authDomain: "stop-criollo.firebaseapp.com",
+            projectId: "stop-criollo",
+            storageBucket: "stop-criollo.firebasestorage.app",
+            messagingSenderId: "462701020576",
+            appId: "1:462701020576:web:4a03189d5ff6a9e11110c5"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
         function ir(id) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            if(id === 'm-tienda') renderPayPal();
         }
 
-        function jugar() {
-            const letras = "ABCDEFGHJKLMNOPQRSTV";
-            document.getElementById('display-letra').innerText = letras[Math.floor(Math.random()*letras.length)];
-            ir('m-juego');
+        function loginGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).then((result) => {
+                document.getElementById('user-name').innerText = "¡Habla, " + result.user.displayName.split(' ')[0] + "!";
+                ir('m-inicio');
+            }).catch(err => alert("Error: " + err.message));
+        }
+
+        function crearSala() {
+            const code = Math.random().toString(36).substring(7).toUpperCase();
+            const p = document.getElementById('players').value;
+            const r = document.getElementById('rounds').value;
+            
+            db.collection("salas").doc(code).set({
+                creador: auth.currentUser.uid,
+                maxJugadores: p,
+                maxRondas: r,
+                estado: "esperando"
+            }).then(() => {
+                alert("Sala: " + code + "\n¡Comparte el código con tus panas!");
+                ir('m-juego');
+            });
         }
 
         function vibrarYStop() {
-            if (navigator.vibrate) { navigator.vibrate([200, 100, 200]); }
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
             alert("¡STOP CRIOLLO!");
             ir('m-inicio');
-        }
-
-        function renderPayPal() {
-            document.getElementById('paypal-button-container').innerHTML = "";
-            paypal.Buttons({
-                createOrder: (data, actions) => { return actions.order.create({ purchase_units: [{ amount: { value: '1.00' } }] }); },
-                onApprove: (data, actions) => { return actions.order.capture().then(() => alert('Pago Exitoso!')); }
-            }).render('#paypal-button-container');
         }
     </script>
 </body>
 </html>
-
