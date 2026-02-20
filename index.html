@@ -2,153 +2,176 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STOP CRIOLLO ELITE</title>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stop Criollo - Williams Edition</title>
     <style>
-        :root { --am: #F7D117; --az: #003893; --ro: #CF142B; --dark: #001a33; }
-        body { font-family: 'Arial', sans-serif; background: var(--dark); color: white; margin: 0; text-align: center; overflow-x: hidden; }
-        .view { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
-        .active { display: flex; }
-        .btn { background: var(--az); color: white; border: 2px solid #0055e6; padding: 15px; border-radius: 15px; width: 100%; max-width: 300px; font-weight: bold; margin: 8px; cursor: pointer; transition: 0.3s; }
-        .btn:active { transform: scale(0.95); }
-        .btn-google { background: #db4437; border: none; }
-        .btn-stop { background: var(--ro); font-size: 2rem; height: 100px; width: 100px; border-radius: 50%; box-shadow: 0 0 20px var(--ro); border: 4px solid white; margin-top: 20px; }
-        input, select { background: #002b52; border: 1px solid var(--am); padding: 12px; border-radius: 10px; color: white; margin: 5px; width: 90%; font-size: 1rem; }
-        .letra-box { font-size: 4rem; color: var(--am); border: 4px dashed var(--am); width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; border-radius: 20px; margin-bottom: 15px; background: rgba(247, 209, 23, 0.1); }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 400px; }
-        .ranking-item { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 10px; width: 100%; box-sizing: border-box; }
+        :root { --azul: #0077ff; --rojo: #ff4d4d; --papel: #fdfdfd; --verde: #25D366; }
+        body { 
+            margin: 0; font-family: 'Comic Sans MS', cursive, sans-serif; 
+            background: #ccc; background-image: linear-gradient(var(--papel) 95%, #e0e0e0 100%);
+            background-size: 100% 30px; display: flex; justify-content: center; min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body::before { content: ''; position: fixed; left: 40px; top: 0; bottom: 0; width: 2px; background: var(--rojo); z-index: 0; }
+        .container { width: 100%; max-width: 500px; padding: 20px; z-index: 1; text-align: center; position: relative; }
+        
+        button { 
+            background: var(--azul); color: white; border: none; padding: 15px; 
+            border-radius: 15px; font-size: 18px; width: 85%; margin: 8px 0;
+            box-shadow: 0 5px #0056b3; cursor: pointer; transition: 0.2s;
+        }
+        button:active { transform: translateY(4px); box-shadow: 0 1px #0056b3; }
+        .btn-volver { background: #666 !important; box-shadow: 0 5px #444 !important; width: 60%; font-size: 14px; }
+        .hidden { display: none; }
+        
+        .scroll-juego { max-height: 55vh; overflow-y: auto; padding: 10px; background: rgba(255,255,255,0.6); border-radius: 15px; border: 1px solid #ddd; }
+        .input-juego { width: 90%; padding: 12px; margin: 6px 0; border: 2px solid var(--azul); border-radius: 12px; font-size: 16px; outline: none; }
+
+        /* Panel de Emojis */
+        .panel-emojis {
+            position: fixed; bottom: 85px; right: 20px; display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 10px; background: white; padding: 12px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 100;
+        }
+        .btn-em { font-size: 25px; background: none; border: none; width: 45px; height: 45px; box-shadow: none; margin: 0; padding: 0; }
+        
+        .emoji-animado {
+            position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 120px; animation: pop 2s forwards; z-index: 1000; pointer-events: none;
+        }
+        @keyframes pop { 0% { scale: 0; opacity: 0; } 50% { scale: 1.5; opacity: 1; } 100% { transform: translate(-50%, -150%); opacity: 0; } }
+        
+        .sala-box { background:white; padding:15px; border-radius:15px; border:3px dashed var(--azul); margin: 15px 0; }
     </style>
 </head>
 <body>
 
-    <div id="m-login" class="view active">
-        <h1 style="color:var(--am); font-size: 2.5rem;">🇻🇪 STOP CRIOLLO</h1>
-        <p>¡El juego de los panas!</p>
-        <button class="btn btn-google" onclick="loginGoogle()">ENTRAR CON GOOGLE</button>
+<audio id="musica-fondo" loop preload="auto">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+</audio>
+<audio id="sonido-stop" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+    <div id="p-inicio">
+        <h1 style="font-size: 35px;">🇻🇪 STOP CRIOLLO 🇻🇪</h1>
+        <p>¡Hablame, Williams!</p>
+        <button onclick="activarMusicaYEntrar()" style="background: #ffeb3b; color: black; box-shadow: 0 5px #c6a700;">🔊 ACTIVAR MÚSICA Y ENTRAR</button>
     </div>
 
-    <div id="m-inicio" class="view">
-        <h2 id="user-name" style="color:var(--am)">¡Habla, Pana!</h2>
-        <button class="btn" onclick="ir('m-crear-sala')">CREAR SALA ONLINE</button>
-        <button class="btn" onclick="ir('m-unirse-sala')">UNIRME A SALA</button>
-        <button class="btn" onclick="ir('m-ranking')">🏆 VER RANKING GLOBAL</button>
-        <button class="btn" style="background:#444" onclick="alert('Próximamente: Emojis Criollos')">🛒 TIENDA</button>
+    <div id="p-menu" class="hidden">
+        <h2>¿CÓMO VAMOS A JUGAR?</h2>
+        <button onclick="mostrarCrear()">CREAR SALA (QR)</button>
+        <button onclick="navegar('p-unirse')">UNIRSE A SALA</button>
+        <button onclick="mostrarRanking()">RANKING MENSUAL</button>
+        <button class="btn-volver" onclick="navegar('p-inicio')">CERRAR SESIÓN</button>
     </div>
 
-    <div id="m-crear-sala" class="view">
-        <h3>CONFIGURA TU PARTIDA</h3>
-        <label>Jugadores (2-10):</label>
-        <input type="number" id="players" value="2" min="2" max="10">
-        <label>Rondas (3-10):</label>
-        <input type="number" id="rounds" value="3" min="3" max="10">
-        <button class="btn" onclick="crearSala()">GENERAR CÓDIGO Y EMPEZAR</button>
-        <button class="btn" onclick="ir('m-inicio')" style="background:none; border:none;">VOLVER</button>
-    </div>
-
-    <div id="m-juego" class="view">
-        <div id="display-letra" class="letra-box">?</div>
-        <div class="grid-inputs">
-            <input type="text" id="campo1" placeholder="Pana/Famoso">
-            <input type="text" id="campo2" placeholder="Vaina (Cosa)">
-            <input type="text" id="campo3" placeholder="Comida Criolla">
-            <input type="text" id="campo4" placeholder="Lugar de Vzla">
+    <div id="p-crear" class="hidden">
+        <h3>SALA CREADA</h3>
+        <div class="sala-box">
+            <h1 id="codigo-txt" style="color:var(--azul); margin: 5px 0;">STOP-777</h1>
+            <img id="qr-img" src="" width="160" height="160" style="background:#fff; padding:5px; border-radius:10px;">
+            <p style="font-size:14px; font-weight:bold;">¡PÁSALO PARA QUE ESCANEEN!</p>
         </div>
-        <button class="btn btn-stop" onclick="vibrarYStop()">STOP!</button>
+        <button onclick="compartir()" style="background:#ff9800; box-shadow:0 5px #e68a00;">📤 COMPARTIR TODO</button>
+        <button onclick="navegar('p-juego')" style="background:var(--verde); box-shadow:0 5px #128C7E;">¡INICIAR PARTIDA!</button>
+        <button class="btn-volver" onclick="navegar('p-menu')">VOLVER</button>
     </div>
 
-    <div id="m-ranking" class="view">
-        <h2 style="color:var(--am)">🏆 TOP 10 PANAS</h2>
-        <div id="tabla-puntos" style="width:100%; max-width:300px; background:rgba(0,0,0,0.3); border-radius:15px; padding:10px;">
-            Cargando ranking...
+    <div id="p-juego" class="hidden">
+        <h2 style="color:var(--rojo); margin-bottom:5px;">LETRA: <span id="letra">B</span></h2>
+        <div class="scroll-juego">
+            <input type="text" class="input-juego" placeholder="1. Nombre">
+            <input type="text" class="input-juego" placeholder="2. Apellido">
+            <input type="text" class="input-juego" placeholder="3. Animal">
+            <input type="text" class="input-juego" placeholder="4. Fruta o Comida">
+            <input type="text" class="input-juego" placeholder="5. Color">
+            <input type="text" class="input-juego" placeholder="6. Cosa u Objeto">
+            <input type="text" class="input-juego" placeholder="7. País o Ciudad">
+            <input type="text" class="input-juego" placeholder="8. Profesión">
+            <input type="text" class="input-juego" placeholder="9. Famoso">
+            <input type="text" class="input-juego" placeholder="10. Prenda de vestir">
         </div>
-        <button class="btn" onclick="ir('m-inicio')">VOLVER AL MENÚ</button>
+        <button onclick="cantarStop()" style="background:var(--rojo); box-shadow:0 5px #b30000; font-size:25px; height:70px;">¡STOP!</button>
+        <button class="btn-volver" onclick="navegar('p-menu')">SALIR</button>
     </div>
 
-    <script>
-        // CONFIGURACIÓN OFICIAL DE WILLIAMS
-        const firebaseConfig = {
-            apiKey: "AIzaSyA78hdwHxcCmZXh1hg7bz_jg229YaX9N9I",
-            authDomain: "stop-criollo.firebaseapp.com",
-            projectId: "stop-criollo",
-            storageBucket: "stop-criollo.firebasestorage.app",
-            messagingSenderId: "462701020576",
-            appId: "1:462701020576:web:4a03189d5ff6a9e11110c5"
-        };
+    <div id="p-ranking" class="hidden">
+        <h2 id="mes-titulo">RANKING MENSUAL</h2>
+        <div class="sala-box" style="text-align: left;">
+            <p>🥇 1. Williams - 2500 pts</p>
+            <p>🥈 2. El Pana - 1800 pts</p>
+            <p>🥉 3. Invitado - 500 pts</p>
+        </div>
+        <p style="font-size: 11px; color: #666;">* Se reinicia el primer día de cada mes *</p>
+        <button class="btn-volver" onclick="navegar('p-menu')">VOLVER</button>
+    </div>
+</div>
 
-        // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+<div id="reacciones" class="hidden">
+    <div id="menu-emojis" class="panel-emojis hidden">
+        <button class="btn-em" onclick="enviarEmoji('😂')">😂</button>
+        <button class="btn-em" onclick="enviarEmoji('😡')">😡</button>
+        <button class="btn-em" onclick="enviarEmoji('😎')">😎</button>
+        <button class="btn-em" onclick="enviarEmoji('🔥')">🔥</button>
+        <button class="btn-em" onclick="enviarEmoji('😲')">😲</button>
+        <button class="btn-em" onclick="enviarEmoji('💩')">💩</button>
+    </div>
+    <button onclick="toggleEmojis()" style="width:60px; height:60px; border-radius:50%; position:fixed; bottom:15px; right:15px; font-size:30px; background:white; border:3px solid var(--azul); box-shadow:0 4px 10px rgba(0,0,0,0.3);">😊</button>
+</div>
 
-        // Navegación entre pantallas
-        function ir(id) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(id === 'm-ranking') escucharRanking();
-        }
+<script>
+    const mFondo = document.getElementById('musica-fondo');
+    const sStop = document.getElementById('sonido-stop');
+    const linkBase = "https://cludo651-netizen.github.io/Stop-criollo-/";
 
-        // Login de Google
-        function loginGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then((result) => {
-                const user = result.user;
-                document.getElementById('user-name').innerText = "¡Habla, " + user.displayName.split(' ')[0] + "!";
-                
-                // Guardar usuario en Firestore
-                db.collection("users").doc(user.uid).set({
-                    nombre: user.displayName,
-                    puntos: firebase.firestore.FieldValue.increment(0),
-                    foto: user.photoURL
-                }, { merge: true });
+    function activarMusicaYEntrar() {
+        mFondo.play().catch(() => console.log("Música esperando interacción"));
+        navegar('p-menu');
+    }
 
-                ir('m-inicio');
-            }).catch(err => alert("Error: " + err.message));
-        }
+    function navegar(id) {
+        document.querySelectorAll('.container > div').forEach(d => d.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+        if(id === 'p-juego' || id === 'p-crear') document.getElementById('reacciones').classList.remove('hidden');
+        else document.getElementById('reacciones').classList.add('hidden');
+    }
 
-        // Crear Sala Online (2-10 personas)
-        function crearSala() {
-            const code = Math.random().toString(36).substring(7).toUpperCase();
-            const p = document.getElementById('players').value;
-            const r = document.getElementById('rounds').value;
-            
-            db.collection("salas").doc(code).set({
-                creador: auth.currentUser.uid,
-                maxJugadores: p,
-                maxRondas: r,
-                estado: "esperando",
-                fecha: new Date()
-            }).then(() => {
-                alert("SALA CREADA: " + code + "\n¡Pásale el código a tus panas!");
-                ir('m-juego');
-            });
-        }
+    function mostrarCrear() {
+        const cod = "STOP-" + Math.floor(100 + Math.random() * 900);
+        document.getElementById('codigo-txt').innerText = cod;
+        document.getElementById('qr-img').src = `https://chart.googleapis.com/chart?chs=160x160&cht=qr&chl=${encodeURIComponent(linkBase+"?s="+cod)}`;
+        navegar('p-crear');
+    }
 
-        // Sistema de Ranking en Vivo
-        function escucharRanking() {
-            db.collection("users").orderBy("puntos", "desc").limit(10)
-                .onSnapshot((snapshot) => {
-                    let html = "";
-                    snapshot.forEach((doc) => {
-                        const data = doc.data();
-                        html += `
-                            <div class="ranking-item">
-                                <span>🔥 ${data.nombre.split(' ')[0]}</span>
-                                <span style="color:var(--am); font-weight:bold;">${data.puntos || 0} pts</span>
-                            </div>`;
-                    });
-                    document.getElementById('tabla-puntos').innerHTML = html || "No hay jugadores aún.";
-                });
-        }
+    function cantarStop() {
+        sStop.play();
+        alert("¡¡¡STOOP!!! 🛑\nHora de sumar:\n- Única: 100\n- Repetida: 50\n- Inventada: 75\n- Error ortográfico: -5 pts");
+        navegar('p-menu');
+    }
 
-        // Efecto STOP y vibración
-        function vibrarYStop() {
-            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-            alert("¡STOP CRIOLLO! \nRevisando respuestas...");
-            ir('m-ranking');
-        }
-    </script>
+    function mostrarRanking() {
+        const meses = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
+        document.getElementById('mes-titulo').innerText = "RANKING DE " + meses[new Date().getMonth()];
+        navegar('p-ranking');
+    }
+
+    function compartir() {
+        const txt = `¡Epa pana! Únete a mi partida de Stop Criollo 🇻🇪\nCódigo: ${document.getElementById('codigo-txt').innerText}\nJuega aquí: ${linkBase}`;
+        if(navigator.share) navigator.share({title:'Stop Criollo', text:txt, url:linkBase});
+        else window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`);
+    }
+
+    function toggleEmojis() { document.getElementById('menu-emojis').classList.toggle('hidden'); }
+    
+    function enviarEmoji(e) {
+        const div = document.createElement('div');
+        div.className = 'emoji-animado'; div.innerText = e;
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 2000);
+        toggleEmojis();
+    }
+</script>
 </body>
 </html>
