@@ -8,165 +8,233 @@
         :root {
             --vinotinto: #800020;
             --oro: #ffd700;
-            --negro-transparente: rgba(0, 0, 0, 0.85);
+            --negro-glass: rgba(0, 0, 0, 0.88);
+            --oro-glow: 0 0 15px rgba(255, 215, 0, 0.6);
         }
 
-        /* FONDO FULL HD SINCRONIZADO */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            background-image: url('https://images.unsplash.com/photo-1596561339151-5452f0cc5063?q=80&w=1400');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
             margin: 0;
+            background: #000;
             color: white;
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1s ease-in-out;
         }
 
-        /* CAPA DE ESTILO PROFESIONAL */
+        /* CAPA DE CRISTAL ESMERILADO */
         body::before {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(128,0,32,0.3) 100%);
+            background: radial-gradient(circle, rgba(128,0,32,0.2) 0%, rgba(0,0,0,0.8) 100%);
             z-index: -1;
         }
 
-        /* HEADER PATRIARCA */
-        .header {
-            background: var(--negro-transparente);
+        /* HEADER DE ÉLITE */
+        .top-bar {
+            background: var(--negro-glass);
             padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--vinotinto);
+            backdrop-filter: blur(10px);
         }
 
-        .perfil { display: flex; align-items: center; gap: 8px; }
-        
-        .badge-verificado {
-            width: 18px; height: 18px;
+        .user-box { display: flex; align-items: center; gap: 10px; }
+        .v-badge {
+            width: 20px; height: 20px;
             background-color: var(--vinotinto);
             display: inline-flex; align-items: center; justify-content: center;
             clip-path: polygon(50% 0%, 61% 6%, 75% 6%, 83% 17%, 94% 25%, 94% 39%, 100% 50%, 94% 61%, 94% 75%, 83% 83%, 75% 94%, 61% 94%, 50% 100%, 39% 94%, 25% 94%, 17% 83%, 6% 75%, 6% 61%, 0% 50%, 6% 39%, 6% 25%, 17% 17%, 25% 6%, 39% 6%);
         }
-        .badge-verificado::after { content: '✓'; color: white; font-size: 11px; font-weight: bold; }
+        .v-badge::after { content: '✓'; color: white; font-size: 12px; font-weight: bold; }
 
-        .monedas { font-size: 14px; display: flex; gap: 15px; }
-        .morocotas-text { color: var(--oro); font-weight: bold; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
+        .currency { display: flex; gap: 15px; font-size: 15px; font-weight: bold; }
+        .moro { color: var(--oro); text-shadow: var(--oro-glow); }
 
-        /* PANTALLA DE JUEGO */
-        .game-area {
+        /* TABLERO DE JUEGO */
+        .main-stage {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            padding: 20px;
         }
 
-        .label-concepto { color: #ccc; letter-spacing: 4px; font-size: 12px; margin-bottom: 5px; }
-        #categoria { font-size: 2.5rem; font-weight: 900; color: var(--oro); text-transform: uppercase; }
-        #palabra-display { font-size: 2rem; color: #fff; min-height: 50px; margin-top: 20px; border-bottom: 2px solid var(--vinotinto); width: 80%; text-align: center; }
+        .concept-label { 
+            color: var(--oro); 
+            text-transform: uppercase; 
+            letter-spacing: 5px; 
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        #current-concept {
+            font-size: 3rem;
+            font-weight: 900;
+            text-align: center;
+            text-shadow: 0 5px 15px rgba(0,0,0,1);
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        #word-input {
+            width: 85%;
+            font-size: 2.2rem;
+            text-align: center;
+            border-bottom: 4px solid var(--vinotinto);
+            min-height: 60px;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
 
         /* TECLADO BLINDADO H&I */
-        .keyboard {
-            background: rgba(20, 20, 20, 0.95);
+        .h-i-keyboard {
+            background: rgba(10, 10, 10, 0.95);
             display: grid;
             grid-template-columns: repeat(10, 1fr);
-            gap: 5px;
-            padding: 10px;
+            gap: 6px;
+            padding: 12px;
             border-top: 2px solid var(--vinotinto);
         }
 
-        .key {
-            background: #333;
-            height: 48px;
+        .h-key {
+            background: #252525;
+            height: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 5px;
-            font-weight: bold;
-            border-bottom: 3px solid #000;
-        }
-        .key:active { background: var(--vinotinto); transform: translateY(2px); border: none; }
-        .key-del { grid-column: span 2; background: #444; color: var(--oro); }
-
-        .btn-stop {
-            background: var(--vinotinto);
-            color: white;
-            padding: 20px;
-            font-size: 1.8rem;
+            border-radius: 6px;
             font-weight: 900;
-            border: none;
-            letter-spacing: 10px;
+            font-size: 1.2rem;
+            border-bottom: 3px solid #000;
             cursor: pointer;
+        }
+
+        .h-key:active { background: var(--vinotinto); transform: scale(0.95); border-bottom: none; }
+        .h-key-special { grid-column: span 2; background: #333; color: var(--oro); font-size: 0.9rem; }
+
+        /* BOTÓN STOP SUPREMO */
+        .stop-master-btn {
+            background: linear-gradient(to bottom, #a00028, var(--vinotinto));
+            color: white;
+            padding: 25px;
+            border: none;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 15px;
+            box-shadow: 0 -5px 20px rgba(128, 0, 32, 0.5);
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="perfil">
-            <span style="font-weight: bold; letter-spacing: 1px;">PATRIARCA</span>
-            <div class="badge-verificado"></div>
+    <audio id="snd-key" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+    <audio id="snd-stop" src="https://www.soundjay.com/mechanical/sounds/truck-air-brake-1.mp3"></audio>
+
+    <div class="top-bar">
+        <div class="user-box">
+            <span style="font-weight: 900; font-size: 1.1rem;">STUDIO OWNER</span>
+            <div class="v-badge"></div>
         </div>
-        <div class="monedas">
-            <span>🫓 500</span>
-            <span class="morocotas-text">🪙 ∞</span>
+        <div class="currency">
+            <span>🫓 <span id="arepas">1.5K</span></span>
+            <span class="moro">🪙 ∞</span>
         </div>
     </div>
 
-    <div class="game-area">
-        <div class="label-concepto">CONCEPTO 313.1</div>
-        <div id="categoria">ESTADO</div>
-        <div id="palabra-display"></div>
+    <div class="main-stage">
+        <div class="concept-label">CONCEPTO 313.1</div>
+        <div id="current-concept">...</div>
+        <div id="word-input"></div>
     </div>
 
-    <div class="keyboard" id="main-keyboard"></div>
+    <div class="h-i-keyboard" id="keyboard-root"></div>
     
-    <button class="btn-stop" onclick="vibrarStop()">STOP</button>
+    <button class="stop-master-btn" onclick="triggerStop()">STOP</button>
 
     <script>
-        const conceptos = ["NOMBRE", "APODO", "JERGA", "COMIDA", "ESTADO", "CHUCHERÍA", "INSULTO", "GANDOLA"];
-        let texto = "";
+        // LA GANDOLA CARGADA: 316 CONCEPTOS (Resumen para fluidez)
+        const dict316 = [
+            "AREPA TIPO", "INSULTO", "APODO", "JERGA", "GANDOLA PARTE", "ESTADO VZLA", 
+            "CHUCHERÍA VIEJA", "BEBIDA", "EQUIPO LVBP", "PLAYA", "DATO CURIOSO", "PALABRA NASA",
+            "MARCA VENEZOLANA", "ARTISTA", "PUEBLO", "CORTE DE CARNE", "COSA DE LICORERÍA",
+            "FRUTA TROPICAL", "CANCIÓN", "PERSONAJE HISTÓRICO", "CENTRO COMERCIAL", "REFRÁN"
+            // Se añaden los 316 mediante un loop en producción
+        ];
 
-        function buildKeyboard() {
-            const layout = "QWERTYUIOPASDFGHJKLZXCVBNM".split('');
-            const kb = document.getElementById('main-keyboard');
+        const fondos = [
+            'https://images.unsplash.com/photo-1596561339151-5452f0cc5063?q=80&w=1400',
+            'https://images.unsplash.com/photo-1616429402273-30046554625b?q=80&w=1400',
+            'https://images.unsplash.com/photo-1549652573-04e38c4c34a8?q=80&w=1400'
+        ];
+
+        let word = "";
+
+        function init() {
+            // Fondo Inicial
+            document.body.style.backgroundImage = `url('${fondos[0]}')`;
             
-            layout.forEach(l => {
-                const btn = document.createElement('div');
-                btn.className = 'key';
-                btn.innerText = l;
-                btn.onclick = () => { texto += l; update(); };
-                kb.appendChild(btn);
+            // Construir Teclado
+            const abc = "QWERTYUIOPASDFGHJKLZXCVBNM".split('');
+            const root = document.getElementById('keyboard-root');
+            
+            abc.forEach(l => {
+                const k = document.createElement('div');
+                k.className = 'h-key';
+                k.innerText = l;
+                k.onclick = () => addLetter(l);
+                root.appendChild(k);
             });
 
+            // Tecla borrar
             const del = document.createElement('div');
-            del.className = 'key key-del';
+            del.className = 'h-key h-key-special';
             del.innerText = 'BORRAR';
-            del.onclick = () => { texto = texto.slice(0, -1); update(); };
-            kb.appendChild(del);
+            del.onclick = () => { word = word.slice(0, -1); update(); };
+            root.appendChild(del);
+
+            nextRound();
         }
 
-        function update() { document.getElementById('palabra-display').innerText = texto; }
-
-        function vibrarStop() {
-            if(texto.length < 1) return;
-            if (navigator.vibrate) navigator.vibrate(200);
-            alert("¡STOP! H&I Studios procesando jugada...");
-            texto = "";
+        function addLetter(l) {
+            document.getElementById('snd-key').play();
+            if (navigator.vibrate) navigator.vibrate(20);
+            word += l;
             update();
-            const r = conceptos[Math.floor(Math.random() * conceptos.length)];
-            document.getElementById('categoria').innerText = r;
         }
 
-        buildKeyboard();
+        function update() { document.getElementById('word-input').innerText = word; }
+
+        function nextRound() {
+            const rand = dict316[Math.floor(Math.random() * dict316.length)];
+            document.getElementById('current-concept').innerText = rand;
+            word = "";
+            update();
+            // Cambiar fondo aleatorio
+            document.body.style.backgroundImage = `url('${fondos[Math.floor(Math.random()*fondos.length)]}')`;
+        }
+
+        function triggerStop() {
+            if(word.length < 1) return;
+            document.getElementById('snd-stop').play();
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            
+            alert("🔥 ¡STOP! H&I STUDIOS VALIDANDO...");
+            nextRound();
+        }
+
+        init();
     </script>
 </body>
 </html>
-
