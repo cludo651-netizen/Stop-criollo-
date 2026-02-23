@@ -3,254 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>STOP VENEZOLANO | H&I STUDIOS</title>
+    <title>H&I STUDIOS | STOP VZLA</title>
     <style>
         :root {
             --vinotinto: #800020;
             --oro: #ffd700;
-            --negro-abs: #050505;
-            --glass: rgba(255, 255, 255, 0.05);
+            --negro-pro: rgba(10, 10, 10, 0.95);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            margin: 0;
-            background: var(--negro-abs);
-            color: white;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background-image: url('https://images.unsplash.com/photo-1596561339151-5452f0cc5063?q=80&w=1400');
-            background-size: cover;
-            background-position: center;
-            transition: 0.8s filter;
+            margin: 0; background: #000; color: white;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+            background-size: cover; background-position: center;
+            transition: background-image 1.5s ease-in-out;
         }
 
-        /* CAPA DE PROFUNDIDAD */
+        /* CAPA DE PROFUNDIDAD HD */
         .overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(128,0,32,0.4) 100%);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(128,0,32,0.4) 100%);
             z-index: 0;
         }
 
-        /* HEADER DE ALTA GAMA */
+        /* HEADER ELITE */
         .header {
-            position: relative;
-            z-index: 10;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255,215,0,0.2);
+            position: relative; z-index: 10;
+            background: var(--negro-pro); padding: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--vinotinto); backdrop-filter: blur(15px);
         }
 
-        .user-info { display: flex; align-items: center; gap: 10px; }
-        
-        /* EL VERIFICADO VINOTINTO (ESTILO META) */
+        .perfil { display: flex; align-items: center; gap: 10px; }
         .v-badge {
-            width: 20px; height: 20px;
-            background-color: var(--vinotinto);
+            width: 20px; height: 20px; background: var(--vinotinto);
             display: flex; align-items: center; justify-content: center;
             clip-path: polygon(50% 0%, 61% 6%, 75% 6%, 83% 17%, 94% 25%, 94% 39%, 100% 50%, 94% 61%, 94% 75%, 83% 83%, 75% 94%, 61% 94%, 50% 100%, 39% 94%, 25% 94%, 17% 83%, 6% 75%, 6% 61%, 0% 50%, 6% 39%, 6% 25%, 17% 17%, 25% 6%, 39% 6%);
         }
         .v-badge::after { content: '✓'; color: white; font-size: 12px; font-weight: bold; }
 
-        .economy { display: flex; gap: 15px; font-weight: 800; font-size: 14px; }
-        .morocotas { color: var(--oro); text-shadow: 0 0 8px rgba(255,215,0,0.6); }
+        .stats { display: flex; gap: 15px; font-weight: 900; font-size: 14px; }
+        .oro-txt { color: var(--oro); text-shadow: 0 0 10px rgba(255,215,0,0.5); }
 
-        /* ZONA DE JUEGO DINÁMICA */
-        .game-viewport {
-            position: relative;
-            z-index: 5;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+        /* TABLERO DE JUEGO */
+        .game-board {
+            position: relative; z-index: 5; flex-grow: 1;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
 
-        .concept-tag {
-            background: var(--vinotinto);
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 10px;
-            letter-spacing: 3px;
-            font-weight: 900;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(128,0,32,0.4);
-        }
+        .tag { background: var(--vinotinto); padding: 5px 15px; border-radius: 20px; font-size: 10px; letter-spacing: 3px; font-weight: 900; margin-bottom: 15px; }
+        #concepto { font-size: 3.5rem; font-weight: 900; color: white; text-transform: uppercase; text-shadow: 0 5px 20px rgba(0,0,0,0.8); text-align: center; width: 90%; }
+        #word-display { font-size: 2.2rem; color: var(--oro); min-height: 60px; margin-top: 20px; border-bottom: 4px solid var(--vinotinto); width: 80%; text-align: center; font-weight: bold; letter-spacing: 2px; }
 
-        #display-concept {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: white;
-            text-transform: uppercase;
-            text-align: center;
-            line-height: 1;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        #word-preview {
-            margin-top: 30px;
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--oro);
-            min-height: 60px;
-            border-bottom: 3px solid var(--vinotinto);
-            width: 80%;
-            text-align: center;
-            letter-spacing: 4px;
-        }
-
-        /* EL TECLADO BLINDADO H&I */
-        .hi-keyboard {
-            position: relative;
-            z-index: 10;
-            background: rgba(10, 10, 10, 0.95);
-            display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            gap: 6px;
-            padding: 15px;
+        /* TECLADO BLINDADO H&I */
+        .keyboard {
+            position: relative; z-index: 10; background: var(--negro-pro);
+            display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; padding: 12px;
             border-top: 2px solid var(--vinotinto);
         }
 
         .key {
-            background: #222;
-            height: 55px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 8px;
-            font-weight: 900;
-            font-size: 1.2rem;
-            color: #ddd;
-            border-bottom: 4px solid #000;
-            transition: 0.1s;
+            background: #222; height: 50px; display: flex; justify-content: center; align-items: center;
+            border-radius: 6px; font-weight: 900; border-bottom: 3px solid #000; font-size: 1.1rem;
         }
+        .key:active { background: var(--vinotinto); transform: translateY(3px); border-bottom: none; }
+        .key-del { grid-column: span 2; background: #333; color: var(--oro); font-size: 0.8rem; }
 
-        .key:active {
-            background: var(--vinotinto);
-            transform: translateY(4px);
-            border-bottom: none;
-            color: white;
-        }
-
-        .key-del { grid-column: span 2; background: #333; color: var(--oro); font-size: 0.9rem; }
-
-        /* BOTÓN STOP SUPREMO */
-        .btn-stop-master {
-            position: relative;
-            z-index: 10;
-            background: linear-gradient(180deg, #b00020 0%, #800020 100%);
-            color: white;
-            border: none;
-            padding: 25px;
-            font-size: 2rem;
-            font-weight: 900;
-            letter-spacing: 15px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        /* BOTON STOP SUPREMO */
+        .btn-stop {
+            position: relative; z-index: 10;
+            background: linear-gradient(180deg, #a00028, var(--vinotinto));
+            color: white; border: none; padding: 25px;
+            font-size: 2rem; font-weight: 900; letter-spacing: 15px;
             box-shadow: 0 -10px 30px rgba(128,0,32,0.6);
         }
     </style>
 </head>
-<body>
+<body id="game-body">
 
     <div class="overlay"></div>
 
-    <audio id="sfx-key" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
-    <audio id="sfx-stop" src="https://www.soundjay.com/mechanical/sounds/truck-air-brake-1.mp3"></audio>
+    <audio id="snd-key" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="snd-stop" src="https://www.soundjay.com/mechanical/sounds/truck-air-brake-1.mp3"></audio>
 
     <div class="header">
-        <div class="user-info">
-            <span style="letter-spacing: 1px; font-weight: 900;">H&I STUDIO OWNER</span>
+        <div class="perfil">
+            <span style="font-weight: 900;">STUDIO OWNER</span>
             <div class="v-badge"></div>
         </div>
-        <div class="economy">
-            <span>🫓 <span id="arepas">500</span></span>
-            <span class="morocotas">🪙 ∞</span>
+        <div class="stats">
+            <span>🫓 500</span>
+            <span class="oro-txt">🪙 ∞</span>
         </div>
     </div>
 
-    <div class="game-viewport">
-        <div class="concept-tag">CONCEPTO 313.1</div>
-        <div id="display-concept">CARGANDO...</div>
-        <div id="word-preview"></div>
+    <div class="game-board">
+        <div class="tag">CONCEPTO 313.1</div>
+        <div id="concepto">CARGANDO...</div>
+        <div id="word-display"></div>
     </div>
 
-    <div class="hi-keyboard" id="kb-engine"></div>
+    <div class="keyboard" id="kb-engine"></div>
     
-    <button class="btn-stop-master" onclick="executeStop()">STOP</button>
+    <button class="btn-stop" onclick="fireStop()">STOP</button>
 
     <script>
-        const conceptos316 = [
-            "JERGA", "COMIDA", "ESTADO", "APODO", "INSULTO", "GANDOLA", 
-            "CHUCHERÍA", "BEBIDA", "EQUIPO LVBP", "PALABRA NASA", "PLAYA"
-        ];
-
-        const bgHD = [
+        const conceptList = ["AREPA DE", "INSULTO", "APODO", "JERGA", "ESTADO VZLA", "GANDOLA", "EQUIPO LVBP", "CHUCHERIA", "PLAYA VZLA"];
+        const hdBackgrounds = [
             'https://images.unsplash.com/photo-1596561339151-5452f0cc5063?q=80&w=1400',
             'https://images.unsplash.com/photo-1616429402273-30046554625b?q=80&w=1400',
             'https://images.unsplash.com/photo-1549652573-04e38c4c34a8?q=80&w=1400'
         ];
 
-        let currentWord = "";
+        let currentText = "";
 
-        function initGame() {
-            // Teclado
-            const letters = "QWERTYUIOPASDFGHJKLZXCVBNM".split('');
+        function startEngine() {
+            // Fondo Inicial
+            document.body.style.backgroundImage = `url('${hdBackgrounds[0]}')`;
+            
+            // Generar Letras
+            const abc = "QWERTYUIOPASDFGHJKLZXCVBNM".split('');
             const engine = document.getElementById('kb-engine');
             
-            letters.forEach(l => {
+            abc.forEach(l => {
                 const k = document.createElement('div');
                 k.className = 'key';
                 k.innerText = l;
                 k.onclick = () => {
-                    document.getElementById('sfx-key').play();
-                    if(navigator.vibrate) navigator.vibrate(20);
-                    currentWord += l;
-                    renderWord();
+                    document.getElementById('snd-key').currentTime = 0;
+                    document.getElementById('snd-key').play();
+                    if(navigator.vibrate) navigator.vibrate(15);
+                    currentText += l;
+                    updateScreen();
                 };
                 engine.appendChild(k);
             });
 
-            // Borrar
             const del = document.createElement('div');
             del.className = 'key key-del';
             del.innerText = 'BORRAR';
-            del.onclick = () => { currentWord = currentWord.slice(0, -1); renderWord(); };
+            del.onclick = () => { currentText = currentText.slice(0, -1); updateScreen(); };
             engine.appendChild(del);
 
-            newRound();
+            nextCategory();
         }
 
-        function renderWord() { document.getElementById('word-preview').innerText = currentWord; }
+        function updateScreen() { document.getElementById('word-display').innerText = currentText; }
 
-        function newRound() {
-            const pick = conceptos316[Math.floor(Math.random() * conceptos316.length)];
-            document.getElementById('display-concept').innerText = pick;
-            currentWord = "";
-            renderWord();
-            // Cambio de fondo
-            document.body.style.backgroundImage = `url('${bgHD[Math.floor(Math.random()*bgHD.length)]}')`;
+        function nextCategory() {
+            const pick = conceptList[Math.floor(Math.random() * conceptList.length)];
+            document.getElementById('concepto').innerText = pick;
+            currentText = "";
+            updateScreen();
+            // Cambio de fondo HD aleatorio
+            document.body.style.backgroundImage = `url('${hdBackgrounds[Math.floor(Math.random()*hdBackgrounds.length)]}')`;
         }
 
-        function executeStop() {
-            if(currentWord.length < 1) return;
-            document.getElementById('sfx-stop').play();
+        function fireStop() {
+            if(currentText.length < 1) return;
+            document.getElementById('snd-stop').play();
             if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
             
-            alert("🛑 H&I STUDIOS: JUGADA VALIDADA");
-            newRound();
+            // Efecto visual de Stop
+            document.body.style.filter = "sepia(1) saturate(2)";
+            setTimeout(() => {
+                document.body.style.filter = "none";
+                alert("🛑 JUGADA VALIDADA POR H&I STUDIOS");
+                nextCategory();
+            }, 500);
         }
 
-        initGame();
+        startEngine();
     </script>
 </body>
 </html>
