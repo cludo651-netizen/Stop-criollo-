@@ -8,189 +8,249 @@
         :root {
             --vinotinto: #800020;
             --oro: #ffd700;
-            --negro-glass: rgba(0, 0, 0, 0.9);
+            --negro-abs: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
         body {
             margin: 0;
-            background: #000;
+            background: var(--negro-abs);
             color: white;
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            background-image: url('https://images.unsplash.com/photo-1596561339151-5452f0cc5063?q=80&w=1400');
             background-size: cover;
             background-position: center;
-            transition: background-image 1.2s ease-in-out;
+            transition: 0.8s filter;
         }
 
-        /* CAPA DE ESTILO PROFESIONAL */
-        body::before {
-            content: "";
+        /* CAPA DE PROFUNDIDAD */
+        .overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(128,0,32,0.4) 100%);
-            z-index: -1;
+            background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(128,0,32,0.4) 100%);
+            z-index: 0;
         }
 
-        /* HEADER ELITE */
+        /* HEADER DE ALTA GAMA */
         .header {
-            background: var(--negro-glass);
-            padding: 15px;
+            position: relative;
+            z-index: 10;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--vinotinto);
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,215,0,0.2);
         }
 
-        .perfil { display: flex; align-items: center; gap: 8px; }
+        .user-info { display: flex; align-items: center; gap: 10px; }
         
+        /* EL VERIFICADO VINOTINTO (ESTILO META) */
         .v-badge {
-            width: 18px; height: 18px;
+            width: 20px; height: 20px;
             background-color: var(--vinotinto);
-            display: inline-flex; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             clip-path: polygon(50% 0%, 61% 6%, 75% 6%, 83% 17%, 94% 25%, 94% 39%, 100% 50%, 94% 61%, 94% 75%, 83% 83%, 75% 94%, 61% 94%, 50% 100%, 39% 94%, 25% 94%, 17% 83%, 6% 75%, 6% 61%, 0% 50%, 6% 39%, 6% 25%, 17% 17%, 25% 6%, 39% 6%);
         }
-        .v-badge::after { content: '✓'; color: white; font-size: 11px; font-weight: bold; }
+        .v-badge::after { content: '✓'; color: white; font-size: 12px; font-weight: bold; }
 
-        .currency { display: flex; gap: 15px; font-size: 14px; font-weight: bold; }
-        .moro { color: var(--oro); text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+        .economy { display: flex; gap: 15px; font-weight: 800; font-size: 14px; }
+        .morocotas { color: var(--oro); text-shadow: 0 0 8px rgba(255,215,0,0.6); }
 
-        /* AREA DE JUEGO */
-        .stage {
+        /* ZONA DE JUEGO DINÁMICA */
+        .game-viewport {
+            position: relative;
+            z-index: 5;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
+            padding: 20px;
         }
 
-        .label { color: #aaa; letter-spacing: 5px; font-size: 10px; margin-bottom: 5px; }
-        #concept { font-size: 3.2rem; font-weight: 900; color: var(--oro); text-transform: uppercase; text-shadow: 0 5px 15px rgba(0,0,0,0.8); }
-        #input-view { font-size: 2.2rem; color: #fff; min-height: 60px; margin-top: 20px; border-bottom: 3px solid var(--vinotinto); width: 85%; font-weight: bold; letter-spacing: 2px; }
+        .concept-tag {
+            background: var(--vinotinto);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 10px;
+            letter-spacing: 3px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(128,0,32,0.4);
+        }
 
-        /* TECLADO BLINDADO */
-        .kb {
-            background: rgba(10, 10, 10, 0.98);
+        #display-concept {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            text-align: center;
+            line-height: 1;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        #word-preview {
+            margin-top: 30px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--oro);
+            min-height: 60px;
+            border-bottom: 3px solid var(--vinotinto);
+            width: 80%;
+            text-align: center;
+            letter-spacing: 4px;
+        }
+
+        /* EL TECLADO BLINDADO H&I */
+        .hi-keyboard {
+            position: relative;
+            z-index: 10;
+            background: rgba(10, 10, 10, 0.95);
             display: grid;
             grid-template-columns: repeat(10, 1fr);
-            gap: 5px;
-            padding: 10px;
+            gap: 6px;
+            padding: 15px;
             border-top: 2px solid var(--vinotinto);
         }
 
         .key {
-            background: #252525;
-            height: 50px;
+            background: #222;
+            height: 55px;
             display: flex;
-            justify-content: center; align-items: center;
-            border-radius: 5px; font-weight: 900;
-            border-bottom: 3px solid #000;
-            font-size: 1.1rem;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: #ddd;
+            border-bottom: 4px solid #000;
+            transition: 0.1s;
         }
-        .key:active { background: var(--vinotinto); transform: translateY(2px); border: none; }
-        .key-del { grid-column: span 2; background: #333; color: var(--oro); font-size: 0.8rem; }
 
-        .btn-stop {
-            background: linear-gradient(to bottom, #a00028, var(--vinotinto));
+        .key:active {
+            background: var(--vinotinto);
+            transform: translateY(4px);
+            border-bottom: none;
             color: white;
-            padding: 22px;
+        }
+
+        .key-del { grid-column: span 2; background: #333; color: var(--oro); font-size: 0.9rem; }
+
+        /* BOTÓN STOP SUPREMO */
+        .btn-stop-master {
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(180deg, #b00020 0%, #800020 100%);
+            color: white;
+            border: none;
+            padding: 25px;
             font-size: 2rem;
             font-weight: 900;
-            border: none;
-            letter-spacing: 12px;
-            cursor: pointer;
+            letter-spacing: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 -10px 30px rgba(128,0,32,0.6);
         }
     </style>
 </head>
 <body>
 
-    <audio id="click" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
-    <audio id="brake" src="https://www.soundjay.com/mechanical/sounds/truck-air-brake-1.mp3"></audio>
+    <div class="overlay"></div>
+
+    <audio id="sfx-key" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+    <audio id="sfx-stop" src="https://www.soundjay.com/mechanical/sounds/truck-air-brake-1.mp3"></audio>
 
     <div class="header">
-        <div class="perfil">
-            <span id="player-name" style="font-weight: 900; letter-spacing: 1px;">STUDIO OWNER</span>
+        <div class="user-info">
+            <span style="letter-spacing: 1px; font-weight: 900;">H&I STUDIO OWNER</span>
             <div class="v-badge"></div>
         </div>
-        <div class="currency">
-            <span>🫓 500</span>
-            <span class="moro">🪙 ∞</span>
+        <div class="economy">
+            <span>🫓 <span id="arepas">500</span></span>
+            <span class="morocotas">🪙 ∞</span>
         </div>
     </div>
 
-    <div class="stage">
-        <div class="label">CONCEPTO 313.1</div>
-        <div id="concept">CARGANDO...</div>
-        <div id="input-view"></div>
+    <div class="game-viewport">
+        <div class="concept-tag">CONCEPTO 313.1</div>
+        <div id="display-concept">CARGANDO...</div>
+        <div id="word-preview"></div>
     </div>
 
-    <div class="kb" id="kb-root"></div>
-    <button class="btn-stop" onclick="stopGame()">STOP</button>
+    <div class="hi-keyboard" id="kb-engine"></div>
+    
+    <button class="btn-stop-master" onclick="executeStop()">STOP</button>
 
     <script>
-        const wall = [
+        const conceptos316 = [
+            "JERGA", "COMIDA", "ESTADO", "APODO", "INSULTO", "GANDOLA", 
+            "CHUCHERÍA", "BEBIDA", "EQUIPO LVBP", "PALABRA NASA", "PLAYA"
+        ];
+
+        const bgHD = [
             'https://images.unsplash.com/photo-1596561339151-5452f0cc5063?q=80&w=1400',
             'https://images.unsplash.com/photo-1616429402273-30046554625b?q=80&w=1400',
             'https://images.unsplash.com/photo-1549652573-04e38c4c34a8?q=80&w=1400'
         ];
 
-        const words316 = ["JERGA", "COMIDA CRIPLLA", "ESTADO VZLA", "APODO", "INSULTO", "GANDOLA", "CHUCHERIA", "BEBIDA", "EQUIPO LVBP"];
-        let currentText = "";
+        let currentWord = "";
 
-        function init() {
-            // Fondo HD Aleatorio
-            document.body.style.backgroundImage = `url('${wall[0]}')`;
+        function initGame() {
+            // Teclado
+            const letters = "QWERTYUIOPASDFGHJKLZXCVBNM".split('');
+            const engine = document.getElementById('kb-engine');
             
-            const layout = "QWERTYUIOPASDFGHJKLZXCVBNM".split('');
-            const root = document.getElementById('kb-root');
-            
-            layout.forEach(l => {
+            letters.forEach(l => {
                 const k = document.createElement('div');
                 k.className = 'key';
                 k.innerText = l;
                 k.onclick = () => {
-                    document.getElementById('click').play();
-                    if(navigator.vibrate) navigator.vibrate(15);
-                    currentText += l;
-                    render();
+                    document.getElementById('sfx-key').play();
+                    if(navigator.vibrate) navigator.vibrate(20);
+                    currentWord += l;
+                    renderWord();
                 };
-                root.appendChild(k);
+                engine.appendChild(k);
             });
 
+            // Borrar
             const del = document.createElement('div');
             del.className = 'key key-del';
             del.innerText = 'BORRAR';
-            del.onclick = () => { currentText = currentText.slice(0, -1); render(); };
-            root.appendChild(del);
+            del.onclick = () => { currentWord = currentWord.slice(0, -1); renderWord(); };
+            engine.appendChild(del);
 
             newRound();
         }
 
-        function render() { document.getElementById('input-view').innerText = currentText; }
+        function renderWord() { document.getElementById('word-preview').innerText = currentWord; }
 
         function newRound() {
-            const r = words316[Math.floor(Math.random() * words316.length)];
-            document.getElementById('concept').innerText = r;
-            currentText = "";
-            render();
-            document.body.style.backgroundImage = `url('${wall[Math.floor(Math.random()*wall.length)]}')`;
+            const pick = conceptos316[Math.floor(Math.random() * conceptos316.length)];
+            document.getElementById('display-concept').innerText = pick;
+            currentWord = "";
+            renderWord();
+            // Cambio de fondo
+            document.body.style.backgroundImage = `url('${bgHD[Math.floor(Math.random()*bgHD.length)]}')`;
         }
 
-        function stopGame() {
-            if(currentText.length < 1) return;
-            document.getElementById('brake').play();
-            if(navigator.vibrate) navigator.vibrate([80, 40, 80]);
-            alert("🔥 STOP: H&I STUDIOS PROCESANDO...");
+        function executeStop() {
+            if(currentWord.length < 1) return;
+            document.getElementById('sfx-stop').play();
+            if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            
+            alert("🛑 H&I STUDIOS: JUGADA VALIDADA");
             newRound();
         }
 
-        init();
+        initGame();
     </script>
 </body>
 </html>
