@@ -1,1 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>STOP VENEZOLANO | H&I STUDIOS</title>
+    <style>
+        :root {
+            --vinotinto: #800020;
+            --oro: #ffd700;
+            --negro-transparente: rgba(0, 0, 0, 0.85);
+        }
+
+        /* FONDO FULL HD SINCRONIZADO */
+        body {
+            background-image: url('https://images.unsplash.com/photo-1596561339151-5452f0cc5063?q=80&w=1400');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            color: white;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* CAPA DE ESTILO PROFESIONAL */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(128,0,32,0.3) 100%);
+            z-index: -1;
+        }
+
+        /* HEADER PATRIARCA */
+        .header {
+            background: var(--negro-transparente);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--vinotinto);
+        }
+
+        .perfil { display: flex; align-items: center; gap: 8px; }
+        
+        .badge-verificado {
+            width: 18px; height: 18px;
+            background-color: var(--vinotinto);
+            display: inline-flex; align-items: center; justify-content: center;
+            clip-path: polygon(50% 0%, 61% 6%, 75% 6%, 83% 17%, 94% 25%, 94% 39%, 100% 50%, 94% 61%, 94% 75%, 83% 83%, 75% 94%, 61% 94%, 50% 100%, 39% 94%, 25% 94%, 17% 83%, 6% 75%, 6% 61%, 0% 50%, 6% 39%, 6% 25%, 17% 17%, 25% 6%, 39% 6%);
+        }
+        .badge-verificado::after { content: '✓'; color: white; font-size: 11px; font-weight: bold; }
+
+        .monedas { font-size: 14px; display: flex; gap: 15px; }
+        .morocotas-text { color: var(--oro); font-weight: bold; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
+
+        /* PANTALLA DE JUEGO */
+        .game-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .label-concepto { color: #ccc; letter-spacing: 4px; font-size: 12px; margin-bottom: 5px; }
+        #categoria { font-size: 2.5rem; font-weight: 900; color: var(--oro); text-transform: uppercase; }
+        #palabra-display { font-size: 2rem; color: #fff; min-height: 50px; margin-top: 20px; border-bottom: 2px solid var(--vinotinto); width: 80%; text-align: center; }
+
+        /* TECLADO BLINDADO H&I */
+        .keyboard {
+            background: rgba(20, 20, 20, 0.95);
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            padding: 10px;
+            border-top: 2px solid var(--vinotinto);
+        }
+
+        .key {
+            background: #333;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            font-weight: bold;
+            border-bottom: 3px solid #000;
+        }
+        .key:active { background: var(--vinotinto); transform: translateY(2px); border: none; }
+        .key-del { grid-column: span 2; background: #444; color: var(--oro); }
+
+        .btn-stop {
+            background: var(--vinotinto);
+            color: white;
+            padding: 20px;
+            font-size: 1.8rem;
+            font-weight: 900;
+            border: none;
+            letter-spacing: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="perfil">
+            <span style="font-weight: bold; letter-spacing: 1px;">PATRIARCA</span>
+            <div class="badge-verificado"></div>
+        </div>
+        <div class="monedas">
+            <span>🫓 500</span>
+            <span class="morocotas-text">🪙 ∞</span>
+        </div>
+    </div>
+
+    <div class="game-area">
+        <div class="label-concepto">CONCEPTO 313.1</div>
+        <div id="categoria">ESTADO</div>
+        <div id="palabra-display"></div>
+    </div>
+
+    <div class="keyboard" id="main-keyboard"></div>
+    
+    <button class="btn-stop" onclick="vibrarStop()">STOP</button>
+
+    <script>
+        const conceptos = ["NOMBRE", "APODO", "JERGA", "COMIDA", "ESTADO", "CHUCHERÍA", "INSULTO", "GANDOLA"];
+        let texto = "";
+
+        function buildKeyboard() {
+            const layout = "QWERTYUIOPASDFGHJKLZXCVBNM".split('');
+            const kb = document.getElementById('main-keyboard');
+            
+            layout.forEach(l => {
+                const btn = document.createElement('div');
+                btn.className = 'key';
+                btn.innerText = l;
+                btn.onclick = () => { texto += l; update(); };
+                kb.appendChild(btn);
+            });
+
+            const del = document.createElement('div');
+            del.className = 'key key-del';
+            del.innerText = 'BORRAR';
+            del.onclick = () => { texto = texto.slice(0, -1); update(); };
+            kb.appendChild(del);
+        }
+
+        function update() { document.getElementById('palabra-display').innerText = texto; }
+
+        function vibrarStop() {
+            if(texto.length < 1) return;
+            if (navigator.vibrate) navigator.vibrate(200);
+            alert("¡STOP! H&I Studios procesando jugada...");
+            texto = "";
+            update();
+            const r = conceptos[Math.floor(Math.random() * conceptos.length)];
+            document.getElementById('categoria').innerText = r;
+        }
+
+        buildKeyboard();
+    </script>
+</body>
+</html>
 
